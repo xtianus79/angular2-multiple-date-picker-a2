@@ -14,14 +14,16 @@ var moment = require("moment/moment");
 //declare var moment: any;
 var MultipleDatePicker = (function () {
     function MultipleDatePicker() {
+        this.cssDaysOfSurroundingMonths = this.cssDaysOfSurroundingMonths || 'picker-empty';
         //this.month = this.month || moment().startOf('day');
+        this.projectScope = [];
         this.days = [];
         this._weekDaysOff = this._weekDaysOff || [];
         this.daysOff = this.daysOff || [];
         this.disableBackButton = false;
         this.disableNextButton = false;
         this.daysOfWeek = this.getDaysOfWeek();
-        this._cssDaysOfSurroundingMonths = this._cssDaysOfSurroundingMonths || 'picker-empty';
+        //_cssDaysOfSurroundingMonths: any = this._cssDaysOfSurroundingMonths || 'picker-empty';
         this.yearsForSelect = [];
         this.month = this.month || moment().startOf('day');
         console.log('this is a test');
@@ -82,29 +84,38 @@ var MultipleDatePicker = (function () {
         if (typeof this.dayClick == 'function') {
             this.dayClick(event, day);
         }
+        console.log('this is if day choosen is selectable = ' + day.selectable + ' --- ' + this.isDayOff(day));
         if (day.selectable && !prevented) {
+            console.log('this project scope = ' + this.projectScope + ' --- ' + day.date);
             day.mdp.selected = !day.mdp.selected;
             if (day.mdp.selected) {
-                day.mdp.selected.push(day.date);
+                this.projectScope.push(day.date);
             }
             else {
+                console.log('the 07034840389 ');
                 var idx = -1;
-                for (var i = 0; i < day.mdp.selected.length; ++i) {
-                    if (moment.isMoment(day.mdp.selected[i])) {
-                        if (day.mdp.selected[i].isSame(day.date, 'day')) {
+                for (var i = 0; i < this.projectScope.length; ++i) {
+                    console.log('i work ' + moment.isMoment(this.projectScope[i]) + ' --- ' + this.projectScope[i].isSame(day.date, 'day'));
+                    if (moment.isMoment(this.projectScope[i])) {
+                        if (this.projectScope[i].isSame(day.date, 'day')) {
+                            console.log('We have arrived');
                             idx = i;
                             break;
                         }
                     }
                     else {
-                        if (day.mdp.selected[i].date.isSame(day.date, 'day')) {
+                        if (this.projectScope[i].date.isSame(day.date, 'day')) {
                             idx = i;
                             break;
                         }
                     }
                 }
-                if (idx !== -1)
-                    day.mdp.selected.splice(idx, 1);
+                console.log('this id idx = ' + idx);
+                if (idx !== -1) {
+                    console.log('i have arrived in the idx');
+                    this.projectScope.splice(idx, 1);
+                    console.log('remove from the array = ' + this.projectScope + ' --- ' + day.date);
+                }
             }
         }
         // if (day.selectable && !prevented) {
@@ -130,19 +141,23 @@ var MultipleDatePicker = (function () {
         //     }
         // }
     };
-    MultipleDatePicker.prototype.hoverDay = function (event, day) {
-        event.preventDefault();
-        var prevented = false;
-        event.preventDefault = function () {
-            prevented = true;
-        };
-        // console.log('this was called');
-        if (true) {
-        }
-        if (!prevented) {
-            day.mdp.hover = event.type === 'mouseover';
-        }
-    };
+    // hoverDay(event, day) {
+    //     event.preventDefault();
+    //     //console.log('what is thiz = ' + event.preventDefault() + ' 1 ' + prevented);
+    //     var prevented = false;
+    //     //console.log('what is thiz 22222 = ' + event.preventDefault() + ' 2 ' + prevented);
+    //     event.preventDefault = function () {
+    //         prevented = true;
+    //     };
+    //     // console.log('this was called');
+    //     if (true) {
+    //        // console.log('this was called inside of dayHover = ' + JSON.stringify(event) + ' --- ' + JSON.stringify(day) + ' ----- ');
+    //         //this.dayHover(event, day);
+    //     }
+    //     if (!prevented) {
+    //         day.mdp.hover = event.type === 'mouseover';
+    //     }
+    // }
     MultipleDatePicker.prototype.rightClicked = function (event, day) {
         if (typeof this.rightClick === 'function') {
             event.preventDefault();
@@ -150,8 +165,12 @@ var MultipleDatePicker = (function () {
         }
     };
     MultipleDatePicker.prototype.getDayClasses = function (day) {
+        //this.showDaysOfSurroundingMonths = true;
+        console.log('this is showDaysOfSurroundingMonths = ' + typeof this.showDaysOfSurroundingMonths);
         var css = '';
+        //console.log('this got here ' + day.css)
         if (day.css && (!day.mdp.otherMonth || this.showDaysOfSurroundingMonths)) {
+            console.log('this got here ' + day.css);
             css += ' ' + day.css;
         }
         if (this.cssDaysOfSurroundingMonths && day.mdp.otherMonth) {
@@ -224,10 +243,10 @@ var MultipleDatePicker = (function () {
     };
     /*Check if the date is selected*/
     MultipleDatePicker.prototype.isSelected = function (day) {
-        day.some = function (d) {
+        // console.log('this is log for day = ' + JSON.stringify(day)); // shows object for day
+        this.projectScope.some = function (d) {
             return day.date.isSame(d, 'day');
         };
-        return day.some();
     };
     /*Generate the calendar*/
     MultipleDatePicker.prototype.generate = function () {
@@ -235,7 +254,7 @@ var MultipleDatePicker = (function () {
         var year = this.month.year().toString();
         this.yearsForSelect = this.getYearsForSelect();
         this.monthToDisplay = this.getMonthYearToDisplay();
-        console.log('month to display = ' + this.monthToDisplay);
+        console.log('month to display = ' + this.monthToDisplay + ' this is year ' + year);
         this.yearToDisplay = this.month.format('YYYY');
         var previousDay = moment(this.month).date(0).day(this.sundayFirstDay ? 0 : 1).subtract(1, 'day');
         if (moment(this.month).date(0).diff(previousDay, 'day') > 6) {
@@ -243,10 +262,17 @@ var MultipleDatePicker = (function () {
         }
         var firstDayOfMonth = moment(this.month).date(1), days = [], now = moment(), lastDay = moment(firstDayOfMonth).endOf('month'), createDate = function () {
             var day = {
+                selectable: true,
                 date: moment(previousDay.add(1, 'day')),
+                css: '',
+                title: '',
                 mdp: {
-                    selected: false
-                }
+                    selected: undefined,
+                    today: true,
+                    past: true,
+                    future: true,
+                    otherMonth: false
+                },
             };
             // console.log(this);
             if ((_this.highlightDays === Array)) {
@@ -254,6 +280,8 @@ var MultipleDatePicker = (function () {
                 var hlDay = _this.highlightDays.filter(function (d) {
                     return day.date.isSame(d.date, 'day');
                 });
+                day.css = hlDay.length > 0 ? hlDay[0].css : '';
+                day.title = hlDay.length > 0 ? hlDay[0].title : '';
             }
             day.selectable = !_this.isDayOff(day);
             day.mdp.selected = _this.isSelected(day);
@@ -263,6 +291,7 @@ var MultipleDatePicker = (function () {
             if (!day.date.isSame(_this.month, 'month')) {
                 day.mdp.otherMonth = true;
             }
+            console.log('this is day = ' + JSON.stringify(day));
             return day;
         };
         var maxDays = lastDay.diff(previousDay, 'days'), lastDayOfWeek = this.sundayFirstDay ? 6 : 0;
@@ -336,11 +365,11 @@ __decorate([
 ], MultipleDatePicker.prototype, "disallowGoFuturMonths", void 0);
 __decorate([
     core_1.Input(),
-    __metadata("design:type", String)
+    __metadata("design:type", Boolean)
 ], MultipleDatePicker.prototype, "showDaysOfSurroundingMonths", void 0);
 __decorate([
     core_1.Input(),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], MultipleDatePicker.prototype, "cssDaysOfSurroundingMonths", void 0);
 __decorate([
     core_1.Input(),
