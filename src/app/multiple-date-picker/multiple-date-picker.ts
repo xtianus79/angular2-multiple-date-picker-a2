@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 //import { MomentModule } from 'angular2-moment';
 import * as moment from 'moment/moment';
 //declare var moment: any;
@@ -7,52 +8,108 @@ import * as moment from 'moment/moment';
     moduleId: module.id,
     selector: 'multiple-date-picker',
     templateUrl: 'multiple-date-picker.html',
-    styleUrls: ['multiple-date-picker.css']
+    styleUrls: ['multiple-date-picker.css'],
+    providers: [
+        { 
+          provide: NG_VALUE_ACCESSOR,
+          useExisting: forwardRef(() => MultipleDatePicker),
+          multi: true
+        }
+      ]
 })
-export class MultipleDatePicker implements OnInit {
+export class MultipleDatePicker implements OnInit, ControlValueAccessor {
 
     @Input() highlightDays: any;
     @Input() dayClick: string;
     @Input() dayHover: string;
     @Input() rightClick: string;
     @Input() month: any;
-    @Input() monthChanged: string;
+    @Input() monthChanged: any;
     @Input() monthClick: string;
     @Input() weekDaysOff: any;
     @Input() allDaysOff: string;
     @Input() daysAllowed: any;
-    @Input() sundayFirstDay: string;
-    @Input() disableNavigation: string;
-    @Input() disallowBackPastMonths: string;
+    @Input() disableNavigation: boolean;
+    @Input() disallowBackPastMonths: boolean;
     @Input() disallowGoFuturMonths: string;
     @Input() showDaysOfSurroundingMonths: boolean;
     @Input() cssDaysOfSurroundingMonths: any = this.cssDaysOfSurroundingMonths || 'picker-empty';
     @Input() fireEventsForDaysOfSurroundingMonths: string;
-    @Input() disableDaysBefore: string;
-    @Input() disableDaysAfter: string;
+    @Input() disableDaysBefore: boolean;
+    @Input() disableDaysAfter: boolean;
     @Input() changeYearPast: string;
     @Input() changeYearFuture: string;
 
-    //this.month = this.month || moment().startOf('day');
-    projectScope: any[] = [];
+    // month = this.month || moment().startOf('day');  // can use this instead of placing in the contructor // ask about purpose of having potenial input for month
+
+    @Input() projectScope: any[] = [];
+
+    @Input() something: any[];
+     increment() {
+    //this.something++;
+  }
+  
+  decrement() {
+    //this.something--;
+  }
     days: any[] = [];
     _weekDaysOff: any = this._weekDaysOff || [];
     daysOff: any = this.daysOff || [];
     disableBackButton: any = false;
     disableNextButton: any = false;
-    daysOfWeek = this.getDaysOfWeek();
-   //_cssDaysOfSurroundingMonths: any = this._cssDaysOfSurroundingMonths || 'picker-empty';
+    daysOfWeek: any[] = [];
+
+   // _cssDaysOfSurroundingMonths: any = this._cssDaysOfSurroundingMonths || 'picker-empty';
     yearsForSelect: any = [];
 
     monthToDisplay: string;
 
     yearToDisplay: string;
+    @Input() sundayFirstDay: boolean;
 
-    constructor() { this.month = this.month || moment().startOf('day'); console.log('this is a test'); }
+    constructor() { this.month = this.month || moment().startOf('day'); }
 
     ngOnInit(): void {
         this.generate();
+        this.daysOfWeek = this.getDaysOfWeek();
+        //console.log('this.sundayFirstDaydddd = ' + this.sundayFirstDay);
     }
+
+    // writeValue(value: any) {
+    //   if (value !== undefined) {
+    //     this.counterValue = value;
+    //   }
+    // }
+
+    writeValue(value: any[]) {
+        if (value !== undefined) {
+            this.projectScope = value;
+        }
+    }
+
+    propagateChange = (_: any) => {};
+    
+    registerOnChange(fn: any) {
+        this.propagateChange = fn;
+    }
+
+    registerOnTouched() {}
+
+    @Input()
+    _projectScope = 55; // notice the '_'
+    
+    get projectScope2() {
+        return this._projectScope;
+    }
+    
+    set projectScope2(val) {
+        this._projectScope = val;
+        this.propagateChange(this._projectScope);
+    }
+
+    logMonthChanged(newMonth, oldMonth) {
+        alert( 'new month : ' + moment(newMonth).format('YYYY-M-DD') + ' old month : ' + moment(oldMonth).format('YYYY-M-DD') );
+    }  // future test case shelf for now. regarding change month
 
     checkNavigationButtons() {
         let today = moment(),
@@ -65,21 +122,20 @@ export class MultipleDatePicker implements OnInit {
     getDaysOfWeek() {
         /*To display days of week names in moment.lang*/
         let momentDaysOfWeek = moment().localeData().weekdaysMin(),
-            days = [];
+            daysOfWeek = [];
         for (var i = 1; i < 7; i++) {
-            days.push(momentDaysOfWeek[i]);
+            daysOfWeek.push(momentDaysOfWeek[i]);
         }
         if (this.sundayFirstDay) {
-            days.splice(0, 0, momentDaysOfWeek[0]);
+            daysOfWeek.splice(0, 0, momentDaysOfWeek[0]);
         } else {
-            days.push(momentDaysOfWeek[0]);
+            daysOfWeek.push(momentDaysOfWeek[0]);
         }
-        console.log('your mom = ' + moment().localeData().weekdaysMin());
-        return days;
+        return daysOfWeek;
     }
 
     getMonthYearToDisplay() {
-        var month = this.month.format('MMMM');
+        let month = this.month.format('MMMM');
         return month.charAt(0).toUpperCase() + month.slice(1);
     }
     getYearsForSelect() {
@@ -101,43 +157,32 @@ export class MultipleDatePicker implements OnInit {
     toggleDay(event, day) {
         event.preventDefault();
 
-        //console.log('toggleDay = ' + JSON.stringify(event) + ' --- ' + JSON.stringify(day));
-
-        console.log('this is a test here 8888888 = ' + day.mdp.otherMonth);
-
         // removed day ? day.mdp.otherMonth && 
 
         if (day.mdp.otherMonth && !this.fireEventsForDaysOfSurroundingMonths) {
-            console.log('this is a test here 99999999999');
             return;
         }
-
-        console.log('what is dayClick1111 = ' + this.dayClick);
 
         let prevented = false;
 
         event.preventDefault = () => {
             prevented = true;
         }
-        console.log('what is dayClick = ' + this.dayClick);
         if (typeof this.dayClick == 'function') {
             this.dayClick(event, day);
         }
-        
-        console.log('this is if day choosen is selectable = ' + day.selectable + ' --- ' + this.isDayOff(day));
+
         if (day.selectable && !prevented) {
-            console.log('this project scope = ' + this.projectScope + ' --- ' + day.date);
             day.mdp.selected = !day.mdp.selected;
             if (day.mdp.selected) {
+                console.log('this project scope = ' + this.projectScope); // for testing
                 this.projectScope.push(day.date);
+                
             } else {
-                console.log('the 07034840389 ' );
                 let idx = -1;
                 for (let i = 0; i < this.projectScope.length; ++i) {
-                    console.log('i work ' + moment.isMoment(this.projectScope[i]) + ' --- ' + this.projectScope[i].isSame(day.date, 'day'));
                     if (moment.isMoment(this.projectScope[i])) {
                         if (this.projectScope[i].isSame(day.date, 'day')) {
-                            console.log('We have arrived');
                             idx = i;
                             break;
                         }
@@ -148,43 +193,23 @@ export class MultipleDatePicker implements OnInit {
                         }
                     }
                 }
-                console.log('this id idx = ' + idx);
+
                 if (idx !== -1){
-                    console.log('i have arrived in the idx')
                     this.projectScope.splice(idx, 1);
-                    console.log('remove from the array = ' + this.projectScope + ' --- ' + day.date);
                 } 
             }
         }
-
-
-// if (day.selectable && !prevented) {
-//     day.mdp.selected = !day.mdp.selected;
-//     if (day.mdp.selected) {
-//         scope.ngModel.push(day.date);
-//     } else {
-//         var idx = -1;
-//         for (var i = 0; i < scope.ngModel.length; ++i) {
-//             if (moment.isMoment(scope.ngModel[i])) {
-//                 if (scope.ngModel[i].isSame(day.date, 'day')) {
-//                     idx = i;
-//                     break;
-//                 }
-//             } else {
-//                 if (scope.ngModel[i].date.isSame(day.date, 'day')) {
-//                     idx = i;
-//                     break;
-//                 }
-//             }
-//         }
-//         if (idx !== -1) scope.ngModel.splice(idx, 1);
-//     }
-// }
-
-
-
-
+        this.propagateChange(this.projectScope);
     }
+
+    clearDays() {
+        this.projectScope = [];
+        this.generate();
+    }
+
+    logDays() {
+        this.generate();
+    } // remove this and from html
 
     // hoverDay(event, day) {
     //     event.preventDefault();
@@ -214,12 +239,11 @@ export class MultipleDatePicker implements OnInit {
     }
 
     getDayClasses(day) {
-        //this.showDaysOfSurroundingMonths = true;
-        console.log('this is showDaysOfSurroundingMonths = ' + typeof this.showDaysOfSurroundingMonths)
+        // this.showDaysOfSurroundingMonths = true;
         let css = '';
         //console.log('this got here ' + day.css)
         if (day.css && (!day.mdp.otherMonth || this.showDaysOfSurroundingMonths)) {
-            console.log('this got here ' + day.css)
+            // console.log('this got here ' + day.css)
             css += ' ' + day.css;
         }
         if (this.cssDaysOfSurroundingMonths && day.mdp.otherMonth) {
@@ -248,29 +272,36 @@ export class MultipleDatePicker implements OnInit {
 
     /*Navigate to another month*/
     changeMonth(event, disable, add) {
+
         if (disable) {
             return;
         }
 
         event.preventDefault();
 
-        var prevented = false;
+        let prevented = false;
 
-        event.preventDefault = function () {
+        event.preventDefault = () => {
+            // console.log('entered into preventDefault *****');
             prevented = true;
-        };
+        }
 
-        var monthTo = moment(this.month).add(add, 'month');
+        let monthTo = moment(this.month).add(add, 'month');
+
         if (typeof this.monthClick == 'function') {
             this.monthClick(event, monthTo);
         }
 
+        //this.logMonthChanged(newMonth, oldMonth);
+
         if (!prevented) {
-            var oldMonth = moment(this.month);
+            let oldMonth = moment(this.month);
+            // console.log('oldMonth = ' + oldMonth + ' newMonth = ' + newMonth + ' this.monthChanged = ' + typeof this.monthChanged); // future test case with logMonthChanged
             this.month = monthTo;
             if (typeof this.monthChanged == 'function') {
                 this.monthChanged(this.month, oldMonth);
             }
+            this.generate();
         }
     }
 
@@ -282,7 +313,7 @@ export class MultipleDatePicker implements OnInit {
     /*Check if the date is off : unselectable*/
     isDayOff(day) {
         return this.allDaysOff ||
-            (!!this.disableDaysBefore && moment(day.date).isBefore(this.disableDaysBefore, 'day')) ||
+            (this.disableDaysBefore && moment(day.date).isBefore(moment(), 'day')) ||
             (!!this.disableDaysAfter && moment(day.date).isAfter(this.disableDaysAfter, 'day')) ||
             ((this.weekDaysOff === Array) && this.weekDaysOff.some(function (dayOff) {
                 return day.date.day() === dayOff;
@@ -300,10 +331,22 @@ export class MultipleDatePicker implements OnInit {
 
     /*Check if the date is selected*/
     isSelected(day) {
-        // console.log('this is log for day = ' + JSON.stringify(day)); // shows object for day
-        this.projectScope.some = (d) => {
-            return day.date.isSame(d, 'day');
-        }
+        // let now = moment();
+        // let d = day.mdp.today
+        // console.log('DDDDDDDDDDDDd******** = ' + day.date.isSame(now, 'day'));
+        // function isSameDay(arr, d) {
+        //    // arr = this.projectScope;
+        //    // val = day;
+        //    return arr.some(dayVal => d === dayVal);
+        // }
+        // //console.log('this.projectScope = ' + isSameDay(d));
+        // return isSameDay(this.projectScope, 'd');
+        
+        //return this.projectScope.some(isSameDay);
+
+        // return this.projectScope.some(function (d) {
+        //     return day.date.isSame(d, 'day');
+        // });
     }
 
     /*Generate the calendar*/
@@ -311,7 +354,6 @@ export class MultipleDatePicker implements OnInit {
         let year = this.month.year().toString();
         this.yearsForSelect = this.getYearsForSelect();
         this.monthToDisplay = this.getMonthYearToDisplay();
-        console.log('month to display = ' + this.monthToDisplay + ' this is year ' + year);
         this.yearToDisplay = this.month.format('YYYY');
         let previousDay = moment(this.month).date(0).day(this.sundayFirstDay ? 0 : 1).subtract(1, 'day');
 
@@ -330,16 +372,14 @@ export class MultipleDatePicker implements OnInit {
                     css: '',
                     title: '',
                     mdp: {
-                        selected: undefined, // why is this undefined
-                        today: true,
+                        selected: false,
+                        today: false,
                         past: true,
                         future: true,
                         otherMonth: false
                     },
                 }
-                // console.log(this);
                 if ((this.highlightDays === Array)) {
-                    // console.log('this is in highlightDay = ' );
                     var hlDay = this.highlightDays.filter(function (d) {
                         return day.date.isSame(d.date, 'day');
                     });
@@ -347,14 +387,16 @@ export class MultipleDatePicker implements OnInit {
                     day.title = hlDay.length > 0 ? hlDay[0].title : '';
                 }
                 day.selectable = !this.isDayOff(day);
-                day.mdp.selected = this.isSelected(day);
+                console.log('this.sameDaySelect() = ' + this.isSelected(day));
+                //day.mdp.selected = this.isSelected(day);
                 day.mdp.today = day.date.isSame(now, 'day');
                 day.mdp.past = day.date.isBefore(now, 'day');
                 day.mdp.future = day.date.isAfter(now, 'day');
                 if (!day.date.isSame(this.month, 'month')) {
                     day.mdp.otherMonth = true;
                 }
-                console.log('this is day = ' + JSON.stringify(day));
+                // console.log(' and is selected333 ' + JSON.stringify(day));
+                // console.log('this is day = ' + JSON.stringify(day));
                 return day;
             }
             let maxDays = lastDay.diff(previousDay, 'days'),
@@ -371,7 +413,13 @@ export class MultipleDatePicker implements OnInit {
         this.days = days;
         this.checkNavigationButtons();
 
-        console.log('this is this.days = ' + JSON.stringify(this.days, null, 4));
+        this.propagateChange(this.projectScope);
+
+        //console.log('this is this.days = ' + JSON.stringify(this.days, null, 4));
+    }
+
+    findArray(day) {
+        console.log('this.projectScope = ' + this.projectScope + ' and is selected ' + day)
     }
 
 

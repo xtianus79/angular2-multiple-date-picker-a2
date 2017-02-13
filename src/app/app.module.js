@@ -35,7 +35,8 @@ AppModule = __decorate([
             index_4.MultipleDatePicker
         ],
         providers: [
-            index_3.HeroService
+            index_3.HeroService,
+            index_4.MultipleDatePicker
         ],
         bootstrap: [app_component_1.AppComponent]
     })

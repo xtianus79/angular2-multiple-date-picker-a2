@@ -1,6 +1,8 @@
 <h3>Top Heroesxxxxxx </h3>
 <div>
-    <multiple-date-picker [showDaysOfSurroundingMonths]="false"></multiple-date-picker>
+    <multiple-date-picker [showDaysOfSurroundingMonths]="false" [disallowBackPastMonths]="true" [sundayFirstDay]="true" disableDaysBefore="true"  [(ngModel)]="initialCount"></multiple-date-picker>
+    <button (click)="findArray()">Find Array</button>
+    <button (click)="getNewValue()">Get New Value</button>
 </div>
 <div class="gird grid-pad">
     <div *ngFor="let hero of heroes" (click)="gotoDetail(hero)" class="col-1-4">
@@ -9,3 +11,8 @@
         <div>
     </div>
 </div>
+{{ initialCount | json}}
+
+<!--name="multiple-date-picker"-->
+
+<!--[projectScope]="initialCount"-->

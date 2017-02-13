@@ -25,7 +25,8 @@ import { MultipleDatePicker } from './multiple-date-picker/index';
         MultipleDatePicker
      ],
      providers: [
-         HeroService
+         HeroService,
+         MultipleDatePicker
      ],
     bootstrap: [ AppComponent ]
 })

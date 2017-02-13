@@ -11,20 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var index_1 = require("../services/index");
+var index_2 = require("../multiple-date-picker/index");
 var DashboardComponent = (function () {
-    function DashboardComponent(router, heroService) {
+    function DashboardComponent(router, heroService, multipleDatePicker) {
         this.router = router;
         this.heroService = heroService;
+        this.multipleDatePicker = multipleDatePicker;
         this.heroes = [];
+        this.initialCount = [];
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.heroService.getHeroes()
             .then(function (heroes) { return _this.heroes = heroes.slice(1, 5); });
     };
+    DashboardComponent.prototype.findArray = function () {
+        console.log(this.multipleDatePicker.projectScope);
+    };
     DashboardComponent.prototype.gotoDetail = function (hero) {
         var link = ['/detail', hero.id];
         this.router.navigate(link);
+    };
+    DashboardComponent.prototype.getNewValue = function () {
+        console.log('this is the new initial value 99999 = ' + this.initialCount);
     };
     return DashboardComponent;
 }());
@@ -36,7 +45,8 @@ DashboardComponent = __decorate([
         styleUrls: ['dashboard.component.css']
     }),
     __metadata("design:paramtypes", [router_1.Router,
-        index_1.HeroService])
+        index_1.HeroService,
+        index_2.MultipleDatePicker])
 ], DashboardComponent);
 exports.DashboardComponent = DashboardComponent;
 //# sourceMappingURL=dashboard.component.js.map
