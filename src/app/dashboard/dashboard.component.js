@@ -29,10 +29,10 @@ var DashboardComponent = (function () {
         var _this = this;
         this.heroService.getHeroes()
             .then(function (heroes) { return _this.heroes = heroes.slice(1, 5); });
-        console.log('this is here');
+        //console.log('this is here = ' + matIcons);
     };
     DashboardComponent.prototype.ngAfterViewInit = function () {
-        console.log('i was there in AfterViewInit');
+        console.log(' i was there in AfterViewInit ');
     };
     DashboardComponent.prototype.findArrayFn = function () {
         // day is from mdp's scope of finArrayofDays(day) function 

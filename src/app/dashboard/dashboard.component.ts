@@ -37,11 +37,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.heroService.getHeroes()
             .then(heroes => this.heroes = heroes.slice(1, 5));
-            console.log('this is here');
+            //console.log('this is here = ' + matIcons);
     }
 
     ngAfterViewInit() {
-        console.log('i was there in AfterViewInit');
+        console.log(' i was there in AfterViewInit ');
     }
  
      findArrayFn(){

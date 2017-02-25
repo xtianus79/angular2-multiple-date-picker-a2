@@ -14,7 +14,8 @@ var moment = require("moment/moment");
 var MultipleDatePicker = MultipleDatePicker_1 = (function () {
     function MultipleDatePicker() {
         this.cssDaysOfSurroundingMonths = this.cssDaysOfSurroundingMonths || 'picker-empty';
-        this.month = this.month || moment().startOf('day'); // can use this instead of placing in the contructor // ask about purpose of having potenial input for month
+        this.arrow = 0;
+        this.month = this.month || moment().startOf('day');
         this.projectScope = [];
         this.days = [];
         this._weekDaysOff = this._weekDaysOff || [];
@@ -25,16 +26,22 @@ var MultipleDatePicker = MultipleDatePicker_1 = (function () {
         // _cssDaysOfSurroundingMonths: any = this._cssDaysOfSurroundingMonths || 'picker-empty';
         this.yearsForSelect = [];
         this.propagateChange = function (_) { };
-        //this.month = this.month || moment().startOf('day');
     }
     MultipleDatePicker.prototype.ngOnInit = function () {
         this.generate();
         this.daysOfWeek = this.getDaysOfWeek();
+        this.arrowSelected();
+    };
+    MultipleDatePicker.prototype.arrowSelected = function () {
+        if (this.matIcons) {
+            return this.arrow = 1;
+        }
+        else if (this.fontAwesome) {
+            return this.arrow = 2;
+        }
     };
     MultipleDatePicker.prototype.writeValue = function (value) {
         var _this = this;
-        console.log('the value JSON.stringify = ' + JSON.stringify(value));
-        console.log('the value = ' + value);
         if (value !== undefined) {
             this.projectScope = value;
             if (value !== null) {
@@ -43,15 +50,12 @@ var MultipleDatePicker = MultipleDatePicker_1 = (function () {
                 });
                 this.projectScope.forEach(function (val) {
                     var day = val;
-                    console.log('day ***** = ' + day);
-                    console.log('this.days ***** = ' + JSON.stringify(_this.days, null, 4));
                     _this.days.forEach(function (d) {
                         if (d.date.isSame(day)) {
                             d.mdp.selected = true;
                             return;
                         }
                     });
-                    console.log('this.days ^^^^^^^ = ' + JSON.stringify(_this.days, null, 4));
                 });
             }
         }
@@ -121,14 +125,10 @@ var MultipleDatePicker = MultipleDatePicker_1 = (function () {
             day.mdp.selected = !day.mdp.selected;
             if (day.mdp.selected) {
                 this.projectScope.push(day.date);
-                console.log('this project scope = ' + this.projectScope); // for testing keep!
             }
             else {
                 var idx = -1;
                 for (var i = 0; i < this.projectScope.length; ++i) {
-                    console.log('moment.isMoment = ' + moment.isMoment(this.projectScope[i]));
-                    console.log('top this.projectScope[i] = ' + typeof this.projectScope[i]);
-                    console.log('THING : ' + moment.isMoment(this.projectScope[i]));
                     if (moment.isMoment(this.projectScope[i])) {
                         if (this.projectScope[i].isSame(day.date, 'day')) {
                             idx = i;
@@ -136,10 +136,6 @@ var MultipleDatePicker = MultipleDatePicker_1 = (function () {
                         }
                     }
                     else {
-                        console.log('BREAKPOINT');
-                        console.log('bottom this.projectScope[i] = ' + this.projectScope[i]);
-                        console.log('this.projectScope[i].date = ' + this.projectScope[i].date);
-                        console.log('this.projectScope[i].date.isSame(day.date, day) = ' + this.projectScope[i].date.isSame(day.date, 'day'));
                         if (this.projectScope[i].date.isSame(day.date, 'day')) {
                             idx = i;
                             break;
@@ -327,6 +323,14 @@ __decorate([
     core_1.Input(),
     __metadata("design:type", Object)
 ], MultipleDatePicker.prototype, "monthChanged", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Boolean)
+], MultipleDatePicker.prototype, "fontAwesome", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Boolean)
+], MultipleDatePicker.prototype, "matIcons", void 0);
 __decorate([
     core_1.Input(),
     __metadata("design:type", String)
