@@ -17,7 +17,7 @@ var DashboardComponent = (function () {
         this.router = router;
         this.heroService = heroService;
         this.heroes = [];
-        this.initialCount = [1487826000000, 1487739600000, 1488171600000, 1481950800000, 1488085200000, 1480741200000, 1487998800000, 1489550400000, 1481778000000];
+        this.initialCount = ["Tue Feb 28 2017 00:00:00 GMT-0500"];
         this.charles = 'Christian';
         this.testItems = [
             { 'item': 'array1', 'id': 1 },
@@ -52,10 +52,10 @@ var DashboardComponent = (function () {
         console.log('this is the new initial value 99999 = ' + this.initialCount);
     };
     DashboardComponent.prototype.arrayMock1 = function () {
-        this.initialCount = [1, 2, 3, 4, 5, 6, 1480741200000, 1487998800000, 1489550400000, 1481778000000];
+        this.initialCount = ["Tue Feb 28 2017 00:00:00 GMT-0500"];
     };
     DashboardComponent.prototype.arrayMock2 = function () {
-        this.initialCount = [1, 2, 3, 1488171600000, 1481950800000, 1488085200000, 1480741200000, 1487998800000, 1489550400000, 1481778000000];
+        this.initialCount = [1488171600000];
     };
     DashboardComponent.prototype.arrayMock3 = function () {
         this.initialCount = [1, 2, 3, 3, 4, 5, 6, 7, 8, 9];

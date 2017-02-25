@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     heroes: Hero[] = [];
     @Input() title: string;
-    initialCount: any[] = [1487826000000,1487739600000,1488171600000,1481950800000,1488085200000,1480741200000,1487998800000,1489550400000,1481778000000];
+    initialCount: any[] = ["Tue Feb 28 2017 00:00:00 GMT-0500"];
     @Input() charles: string = 'Christian';
 
     testItems: any[] = [
@@ -67,11 +67,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
 
     arrayMock1() {
-        this.initialCount = [1,2,3,4,5,6,1480741200000,1487998800000,1489550400000,1481778000000];
+        this.initialCount = ["Tue Feb 28 2017 00:00:00 GMT-0500"];
     }
 
     arrayMock2() {
-        this.initialCount = [1,2,3,1488171600000,1481950800000,1488085200000,1480741200000,1487998800000,1489550400000,1481778000000];
+        this.initialCount = [1488171600000];
     }
 
     arrayMock3() {

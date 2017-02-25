@@ -8,13 +8,16 @@ import { UiComponent } from './ui/index';
 import { HeroService } from './services/index';
 import { routing } from './app.routing';
 
+import { MaterialModule } from '@angular/material';
+
 import { MultipleDatePicker } from './multiple-date-picker/index';
 
 @NgModule({
     imports: [ 
         BrowserModule,
         FormsModule,
-        routing
+        routing,
+        MaterialModule
     ],
     declarations: [ 
         AppComponent,

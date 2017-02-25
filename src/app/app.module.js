@@ -13,6 +13,7 @@ var app_component_1 = require("./app.component");
 var index_2 = require("./ui/index");
 var index_3 = require("./services/index");
 var app_routing_1 = require("./app.routing");
+var material_1 = require("@angular/material");
 var index_4 = require("./multiple-date-picker/index");
 var AppModule = (function () {
     function AppModule() {
@@ -24,7 +25,8 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
-            app_routing_1.routing
+            app_routing_1.routing,
+            material_1.MaterialModule
         ],
         declarations: [
             app_component_1.AppComponent,
