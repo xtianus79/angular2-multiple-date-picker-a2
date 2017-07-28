@@ -47,7 +47,20 @@
 </form>
 
 <div>
-    <multiple-date-picker [showDaysOfSurroundingMonths]="false" [matIcons]="true" [disallowBackPastMonths]="true" [sundayFirstDay]="true" disableDaysBefore="true" [monthChanged]="logMonthChanged" [(ngModel)]="initialCount"></multiple-date-picker>
+    <multiple-date-picker 
+      [showDaysOfSurroundingMonths]="false" 
+      [matIcons]="true" 
+      [disallowBackPastMonths]="true" 
+      [sundayFirstDay]="true" 
+      [disableDaysBefore]="true"
+      [disableDaysAfter]="false" 
+      [monthChanged]="logMonthChanged"
+      [highlightDays]="highlightDays"
+      [dayClick]="oneDaySelectionOnly"
+      [weekDaysOff]="[0, 3]"
+      [month]="myMonth" 
+      [(ngModel)]="initialCount">
+    </multiple-date-picker>
     <button (click)="findArrayFn()">Find Array: For Testing</button>
     <button (click)="runGenerateFn()">Run Generate: For Testing</button>
     <button (click)="fireClearDays();arrayMock1()">Change Array 1</button>

@@ -1,23 +1,29 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Hero } from '../models/index';
 import { HeroService } from '../services/index';
 
-import { MultipleDatePicker } from '../multiple-date-picker/index';
+import { MultipleDatePicker, DateRangeHelper } from '../multiple-date-picker/index';
+import * as moment from 'moment/moment';
 
 @Component({
     moduleId: module.id,
     selector: 'my-dashboard',
     templateUrl: 'dashboard.component.html',
-    styleUrls: [ 'dashboard.component.css' ]
+    styleUrls: [ 'dashboard.component.css' ],
+    encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent implements OnInit, AfterViewInit { 
 
     heroes: Hero[] = [];
     @Input() title: string;
-    initialCount: any[] = ["Tue Feb 28 2017 00:00:00 GMT-0500"];
+    highlightDays: any[];
+    initialCount: Array<any>;
     @Input() charles: string = 'Christian';
+    selectedDays: Array<Date>;
+    datesArray: Array<any>;
+    myMonth: any;
 
     testItems: any[] = [
         {'item': 'array1', 'id': 1},
@@ -28,8 +34,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     constructor(
         private router: Router,
         private heroService: HeroService,
+        // private dateRangeHelper: DateRangeHelper
         //public multipleDatePicker: MultipleDatePicker
-    ) {}
+    ) { }
 
     @ViewChild(MultipleDatePicker)
     private multipleDatePicker: MultipleDatePicker;
@@ -38,9 +45,62 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.heroService.getHeroes()
             .then(heroes => this.heroes = heroes.slice(1, 5));
             //console.log('this is here = ' + matIcons);
+        
+        // set array to either [] or the following values like example below
+         this.highlightDays = [
+            {date: moment().date(22).valueOf(), css: 'holiday', selectable: false, title: 'Holiday time !'},
+            {date: moment().date(25).valueOf(), css: 'off', selectable: false, title: 'We don\'t work today'},
+            {date: moment().date(30).valueOf(), css: 'birthday', selectable: true, title: 'I\'m thir... i\'m 28, seriously, I mean ...'}
+         ];
+
+         console.log('date: moment().date(19).valueOf() ', moment().date(19).valueOf());
+         console.log('date: moment().date(20).valueOf() ', moment().date(20).valueOf());
+         console.log('date: moment().date(21).valueOf() ', moment().date(21).valueOf());
+
+
+        this.initialCount = [];
+        
+        // enter variables for startDates and End dates
+        let startDate = 1509768000000; // enter variable or ms value
+        let endDate = 1510722000000; // enter variable or ms value // 1502510400000
+
+        // console.log('calucator values ' + this.dateRangeHelper.dateRangeDaysCalculator(endDate, startDate))
+
+        if (DateRangeHelper.dateRangeDaysCalculator(endDate, startDate) >= 0) {
+            let days = DateRangeHelper.dateRangeDaysCalculator(endDate, startDate);
+            this.datesArray = DateRangeHelper.getDates(new Date(startDate), (new Date(startDate)).addDays(days)); // date object used not moment in this case
+            console.log('this.datesArray ', this.datesArray);
+        }
+
+        // takes array dates from daterangehelper and adds them to highlighted days for date picker day highlights
+        if (this.datesArray !== undefined && this.datesArray.length > 0) {
+            let daysArray = this.datesArray;
+            let arrayObject = daysArray.find(x => x);
+            let arrayKeys = Object.keys(daysArray);
+            if (arrayObject !== undefined && arrayKeys.length > 0) {
+                this.highlightDays = this.datesArray;
+                let stayNames = 'Christian Smith' // should be set to variable 
+                for (let i in daysArray) {
+                    if (true) {
+                        this.highlightDays.push({date: daysArray[i], css: 'stay-dates', selectable: true, title: `days off for ${stayNames}`});  // set strings
+                    }
+                }
+            }
+        }
+        
+        // calculate addional months to add onto the month object... if this is corrupt in anyway it will default to todays month info
+        let monthsFromToday = DateRangeHelper.dateRangeMonthsCalculator(startDate);
+        if (monthsFromToday > 0) {
+            this.myMonth = moment().add(monthsFromToday, 'months');
+        } else {
+            this.myMonth = moment().startOf('day');
+        }
+        
+
     }
 
     ngAfterViewInit() {
+        this.initialCount = [];
         console.log(' i was there in AfterViewInit ');
     }
  
@@ -88,6 +148,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         alert( 'a new month : ' + newMonth.format('YYYY-M-DD') + ' || old month : ' + oldMonth.format('YYYY-M-DD') );
         console.log('what is newMonth = ' + newMonth);
     }  // future test case shelf for now. regarding change month
-    
+
+
+    oneDaySelectionOnly = (event, date) => {
+        console.log('this.initialCount 333 = ', this.initialCount);
+        this.initialCount.length = 0;
+    };
 
 }

@@ -57,14 +57,18 @@
 }
 
 .picker-day:not(.picker-off):not(.picker-empty):hover {
-    background-color: #C6000B;
-    color: #fff;
-    cursor: pointer
+    background-color: rgba(0, 165, 206, 0.5);
+    color: #f7fb65;
 }
 
 .picker-day.picker-selected {
-    background-color: #C6000B;
-    color: #fff
+    background-color: #d0d425;
+    color: #568eab;
+}
+
+.picker-day.picker-selected.click-selection-active:not(.picker-off) {
+    background-color: #d0d425;
+    color: #568eab;
 }
 
 .picker-day.picker-off,.picker-day.picker-off:hover {
@@ -78,6 +82,41 @@
     cursor: default
 }
 
+.picker-day.stay-dates {
+    background-color: #78BC42;
+    color: #fff;
+}
+
+.picker-day.stay-dates.picker-selected {
+    background-color: #d0d425;
+    color: #568eab;
+}
+
+.picker-day.today.stay-dates {
+    background-color: #00a5ce;
+    color: #f7fb65;
+}
+
+.picker-day.today.stay-dates.picker-selected {
+    background-color: #d0d425;
+    color: #568eab;
+}
+
+.picker-day.stay-dates.picker-off {
+    background-color: rgba(91, 136, 56, 0.6);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.picker-day.stay-dates:not(.picker-off):hover{
+    background-color: rgba(0, 165, 206, 0.5);
+    color: #f7fb65;
+}
+
+.picker-day.stay-dates.picker-selected.click-selection-active:not(.picker-off) {
+    background-color: #d0d425;
+    color: #568eab;
+}
+
 input {
       border: 0;
       border-radius: 3px;
@@ -85,3 +124,6 @@ input {
       max-width: 100px;
       text-align: center;
     }
+
+
+

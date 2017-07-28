@@ -10,7 +10,8 @@ import { routing } from './app.routing';
 
 import { MaterialModule } from '@angular/material';
 
-import { MultipleDatePicker } from './multiple-date-picker/index';
+// add DateClicked Helper to providers if used in future. remember to add to index.ts for export
+import { MultipleDatePicker, DateRangeHelper, DateClickedDirective } from './multiple-date-picker/index';
 
 @NgModule({
     imports: [ 
@@ -25,11 +26,13 @@ import { MultipleDatePicker } from './multiple-date-picker/index';
         DashboardComponent,
         HeroDetailComponent,
         HeroesComponent,
-        MultipleDatePicker
+        MultipleDatePicker,
+        DateClickedDirective
      ],
      providers: [
          HeroService,
-         MultipleDatePicker
+         MultipleDatePicker,
+         DateRangeHelper
      ],
     bootstrap: [ AppComponent ]
 })

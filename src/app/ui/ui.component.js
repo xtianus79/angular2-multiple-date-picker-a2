@@ -8,24 +8,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var UiComponent = (function () {
     function UiComponent() {
     }
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], UiComponent.prototype, "name", void 0);
+    UiComponent = __decorate([
+        core_1.Component({
+            moduleId: module.id,
+            selector: 'ui-main',
+            templateUrl: 'ui.component.html',
+            styleUrls: ['ui.component.css']
+        }),
+        __metadata("design:paramtypes", [])
+    ], UiComponent);
     return UiComponent;
 }());
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", String)
-], UiComponent.prototype, "name", void 0);
-UiComponent = __decorate([
-    core_1.Component({
-        moduleId: module.id,
-        selector: 'ui-main',
-        templateUrl: 'ui.component.html',
-        styleUrls: ['ui.component.css']
-    }),
-    __metadata("design:paramtypes", [])
-], UiComponent);
 exports.UiComponent = UiComponent;
 //# sourceMappingURL=ui.component.js.map

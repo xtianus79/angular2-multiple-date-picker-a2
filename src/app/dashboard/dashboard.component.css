@@ -58,3 +58,23 @@ h4 {
       min-width: 60px;
     }
 }
+
+
+    /*apply colors if not selected, if selected I want the default selected css*/
+.picker-day.holiday:not(.picker-selected){
+    background-color: #00ffa2 !important;
+    color: #fff !important;
+}
+
+/*if my holiday isn't clickable (it's the case in the demo)*/
+.picker-day.holiday.picker-off{
+    background-color: #00a267 !important;
+    color: #fff !important;
+    cursor: default !important;
+}
+
+/*my birthday, is clickable*/
+.picker-day.birthday:not(.picker-selected){
+    background-color: #ded100 !important;
+    color: #000 !important;
+}

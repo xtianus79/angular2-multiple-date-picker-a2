@@ -44,3 +44,23 @@
     background-color: #ded100;
     color: #000;
 }
+
+.picker-day.stay-dates {
+    background-color: #78BC42;
+    color: #fff;
+}
+
+.picker-day.stay-dates.picker-selected {
+    background-color: #629c34;
+    color: #f3ffd2;
+}
+
+.picker-day.stay-dates.picker-off {
+    background-color: #5b8838;
+    color: #fff;
+}
+
+.picker-day.stay-dates:not(.picker-off):hover{
+    background-color: #89d051;
+    color: #fff;
+}

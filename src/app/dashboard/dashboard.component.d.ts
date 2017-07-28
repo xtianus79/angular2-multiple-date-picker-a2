@@ -7,8 +7,12 @@ export declare class DashboardComponent implements OnInit, AfterViewInit {
     private heroService;
     heroes: Hero[];
     title: string;
-    initialCount: any[];
+    highlightDays: any[];
+    initialCount: Array<any>;
     charles: string;
+    selectedDays: Array<Date>;
+    datesArray: Array<any>;
+    myMonth: any;
     testItems: any[];
     constructor(router: Router, heroService: HeroService);
     private multipleDatePicker;
@@ -23,4 +27,5 @@ export declare class DashboardComponent implements OnInit, AfterViewInit {
     arrayMock3(): void;
     fireClearDays(): void;
     logMonthChanged(newMonth: any, oldMonth: any): void;
+    oneDaySelectionOnly: (event: any, date: any) => void;
 }
