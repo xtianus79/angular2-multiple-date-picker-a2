@@ -27,5 +27,5 @@ export declare class DashboardComponent implements OnInit, AfterViewInit {
     arrayMock3(): void;
     fireClearDays(): void;
     logMonthChanged(newMonth: any, oldMonth: any): void;
-    oneDaySelectionOnly: (event: any, date: any) => void;
+    oneDaySelectionOnly: (event: Event, date: Date) => void;
 }

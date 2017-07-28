@@ -40,12 +40,12 @@ export class MultipleDatePicker implements OnInit, ControlValueAccessor {
     arrow: number = 0;
     monthAdjustment: any;
     @Input() month = moment().startOf('day');  // today's day at start of day midnight or passed in value
-    @Input() projectScope: any[] = [];
-    days: any[] = [];
+    @Input() projectScope: Array<any> = [];
+    days: Array<any> = [];
     daysOff: any = this.daysOff || [];
     disableBackButton: any = false;
     disableNextButton: any = false;
-    daysOfWeek: any[] = [];
+    daysOfWeek: Array<any> = [];
     // _cssDaysOfSurroundingMonths: any = this._cssDaysOfSurroundingMonths || 'picker-empty';
     yearsForSelect: any = [];
     monthToDisplay: string;

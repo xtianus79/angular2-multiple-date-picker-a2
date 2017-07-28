@@ -26,8 +26,9 @@ var DashboardComponent = (function () {
             { 'item': 'array2', 'id': 2 },
             { 'item': 'array3', 'id': 3 },
         ]; // potential use if person wanted to create a choosen item to associate with a list of arrays
+        // this is the code needed for only one day selection.... 
+        // This.initialCount is the [(ngmodel)] of the projectScope array;
         this.oneDaySelectionOnly = function (event, date) {
-            console.log('this.initialCount 333 = ', _this.initialCount);
             _this.initialCount.length = 0;
         };
     }

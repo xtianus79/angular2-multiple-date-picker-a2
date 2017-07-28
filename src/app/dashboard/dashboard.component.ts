@@ -149,9 +149,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         console.log('what is newMonth = ' + newMonth);
     }  // future test case shelf for now. regarding change month
 
-
-    oneDaySelectionOnly = (event, date) => {
-        console.log('this.initialCount 333 = ', this.initialCount);
+    // this is the code needed for only one day selection.... 
+    // This.initialCount is the [(ngmodel)] of the projectScope array;
+    oneDaySelectionOnly = (event: Event, date: Date) => {
         this.initialCount.length = 0;
     };
 
