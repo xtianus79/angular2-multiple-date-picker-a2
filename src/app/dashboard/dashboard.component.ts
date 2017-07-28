@@ -33,9 +33,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     constructor(
         private router: Router,
-        private heroService: HeroService,
-        // private dateRangeHelper: DateRangeHelper
-        //public multipleDatePicker: MultipleDatePicker
+        private heroService: HeroService
     ) { }
 
     @ViewChild(MultipleDatePicker)
