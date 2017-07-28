@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         // calculate addional months to add onto the month object... if this is corrupt in anyway it will default to todays month info
         let monthsFromToday = DateRangeHelper.dateRangeMonthsCalculator(startDate);
         if (monthsFromToday > 0) {
-            this.myMonth = moment().add(monthsFromToday, 'months');
+            // this.myMonth = moment().add(monthsFromToday, 'months');
         } else {
             this.myMonth = moment().startOf('day');
         }

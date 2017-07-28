@@ -74,7 +74,7 @@ var DashboardComponent = (function () {
         // calculate addional months to add onto the month object... if this is corrupt in anyway it will default to todays month info
         var monthsFromToday = index_2.DateRangeHelper.dateRangeMonthsCalculator(startDate);
         if (monthsFromToday > 0) {
-            this.myMonth = moment().add(monthsFromToday, 'months');
+            // this.myMonth = moment().add(monthsFromToday, 'months');
         }
         else {
             this.myMonth = moment().startOf('day');
